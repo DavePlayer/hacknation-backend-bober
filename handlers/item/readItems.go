@@ -25,6 +25,12 @@ func ReadItems(c *gin.Context) {
 		page = p
 	}
 
+	var total int64
+	if err := dbConn.Model(&models.Item{}).Count(&total).Error; err != nil {
+		jsonRespond.Error(c, http.StatusInternalServerError, "Failed to count items", err)
+		return
+	}
+
 	var items []models.Item
 	offset := (page - 1) * pageSize
 
@@ -32,6 +38,10 @@ func ReadItems(c *gin.Context) {
 		jsonRespond.Error(c, http.StatusInternalServerError, "Failed to fetch items", err)
 		return
 	}
+	response := gin.H{
+		"total": total,
+		"items": items,
+	}
 
-	jsonRespond.SendJSON(c, items)
+	jsonRespond.SendJSON(c, response)
 }
