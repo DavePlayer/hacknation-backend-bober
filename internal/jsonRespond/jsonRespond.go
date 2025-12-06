@@ -1,6 +1,7 @@
 package jsonRespond
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,9 +16,9 @@ const (
 )
 
 type Response struct {
-	Status  Status `json:"status"`
-	Message string `json:"message,omitempty"`
-	Data    any    `json:"data,omitempty"`
+	Status  Status      `json:"status"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 // ogólny helper
@@ -44,10 +45,14 @@ func Fail(c *gin.Context, httpStatus int, message string, data any) {
 	})
 }
 
-func Error(c *gin.Context, httpStatus int, message string, err ...any) {
+func Error(c *gin.Context, httpStatus int, message string, err error) {
+	log.Printf("http error: %d %s: %v", httpStatus, message, err)
+
 	c.JSON(httpStatus, Response{
 		Status:  StatusError,
 		Message: message,
-		Data:    err,
+		Data: map[string]string{
+			"error": err.Error(),
+		},
 	})
 }

@@ -3,11 +3,34 @@ package models
 import "time"
 
 type User struct {
-	ID             string       `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
-	Name           string       `gorm:"size:100;not null" json:"name"`
-	Surname        string       `gorm:"size:100;not null" json:"surname"`
-	OrganizationID string       `gorm:"not null" json:"organizationId"` // klucz obcy
-	Organization   Organization `gorm:"foreignKey:OrganizationID" json:"organization"`
-	CreatedAt      time.Time    `gorm:"autoCreateTime" json:"createdAt"`
-	UpdatedAt      time.Time    `gorm:"autoUpdateTime" json:"updatedAt"`
+	ID           uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	Email        string    `gorm:"size:100;not null" json:"email"`
+	Password     string    `gorm:"size:100;not null" json:"password"`
+	Name         string    `gorm:"size:100;not null" json:"name"`
+	Surname      string    `gorm:"size:100;not null" json:"surname"`
+	Organization string    `gorm:"size:100;not null"  json:"organization"`
+	CreatedAt    time.Time `gorm:"autoCreateTime" json:"createdAt"`
+	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
+}
+
+type ReturnedUser struct {
+	ID           uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	Email        string    `gorm:"size:100;not null" json:"email"`
+	Name         string    `gorm:"size:100;not null" json:"name"`
+	Surname      string    `gorm:"size:100;not null" json:"surname"`
+	Organization string    `gorm:"size:100;not null"  json:"organization"`
+	CreatedAt    time.Time `gorm:"autoCreateTime" json:"createdAt"`
+	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
+}
+
+func (ReturnedUser) From(u User) ReturnedUser {
+	return ReturnedUser{
+		ID:           u.ID,
+		Email:        u.Email,
+		Name:         u.Name,
+		Surname:      u.Surname,
+		Organization: u.Organization,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
+	}
 }

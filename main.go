@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"bober.app/internal/db"
 	router "bober.app/routes"
 	"github.com/joho/godotenv"
 )
@@ -12,6 +13,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+	db.SyncDatabase()
 	router := router.New()
 
 	router.Run()
