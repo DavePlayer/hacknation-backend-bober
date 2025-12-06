@@ -6,5 +6,5 @@ import (
 )
 
 func HandlePing(c *gin.Context) {
-	jsonRespond.SendJSON(c, gin.H{})
+	jsonRespond.SendJSON(c, gin.H{"OK": "OK"})
 }
