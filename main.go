@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	router "bober.app/routes"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	router := router.New()
+
+	router.Run()
 }
