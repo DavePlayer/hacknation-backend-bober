@@ -23,4 +23,9 @@ func SyncDatabase() {
 		return
 	}
 
+	if err := db.AutoMigrate(&models.Item{}); err != nil {
+		log.Fatal("Failed to migrate model Users %s", err)
+		return
+	}
+
 }

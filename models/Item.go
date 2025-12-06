@@ -2,27 +2,21 @@ package models
 
 import "time"
 
-type Status string
-
-const (
-	StatusPending  Status = "pending"
-	StatusReturned Status = "returned"
-)
-
 type Item struct {
-	ID                     int64     `json:"id"`
-	Issuer_id              string    `json:"issuer"`
-	Name                   string    `json:"itemName"`
-	Type                   string    `json:"type"`
-	Description            string    `json:"description"`
+	ID                     uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	Issuer_id              uint      `gorm:"not null"  json:"issuerId"`
+	Issuer                 User      `gorm:"foreignKey:IssuerID;references:ID" json:"issuer"`
+	Name                   string    `gorm:"size:100;not null" json:"itemName"`
+	Type                   string    `gorm:"size:100;not null" json:"type"`
+	Description            string    `gorm:"size:500;not null" json:"description"`
 	Document_transfer_date time.Time `json:"documentTransferDate"` // time when document was given
-	Entry_date             time.Time `json:"entryDate"`
+	Entry_date             time.Time `gorm:"autoCreateTime" json:"entryDate"`
 	Found_date             time.Time `json:"foundDate"`
-	Issue_number           string    `json:"issueNumber"`
-	Where_stored           string    `json:"whereStored"` // where it is stored
-	Where_found            string    `json:"whereFound"`  // where it was found
-	Voivodeship            string    `json:"voivodeship"` // where it is stored
-	Status                 Status    `json:"status"`
+	Issue_number           string    `gorm:"size:100;not null" json:"issueNumber"`
+	Where_stored           string    `gorm:"size:100;not null" json:"whereStored"` // where it is stored
+	Where_found            string    `gorm:"size:100;not null" json:"whereFound"`  // where it was found
+	Voivodeship            string    `gorm:"size:100;not null" json:"voivodeship"` // where it is stored
+	Status                 string    `gorm:"size:100;not null" json:"status"`
 }
 
 type ImportedItem struct {
@@ -36,5 +30,5 @@ type ImportedItem struct {
 	Where_stored           string    `json:"whereStored"` // where it is stored
 	Where_found            string    `json:"whereFound"`  // where it was found
 	Voivodeship            string    `json:"voivodeship"` // where it is stored
-	Status                 Status    `json:"status"`
+	Status                 string    `json:"status"`
 }

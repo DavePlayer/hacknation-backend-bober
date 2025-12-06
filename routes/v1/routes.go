@@ -2,6 +2,7 @@ package v1
 
 import (
 	"bober.app/handlers"
+	"bober.app/handlers/imports"
 	"bober.app/handlers/item"
 	"bober.app/middleware"
 	"github.com/gin-gonic/gin"
@@ -17,4 +18,6 @@ func Register(r *gin.RouterGroup) {
 	r.PUT("/item/:id", middleware.Auth(), item.UpdateItem)
 	r.GET("/item/:id", item.ReadItem)
 	r.GET("/items/:page", item.ReadItems)
+	// imports
+	r.POST("/import/xlsl", imports.ImportXLSX)
 }
