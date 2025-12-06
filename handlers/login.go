@@ -65,8 +65,8 @@ func LoginHandler(c *gin.Context) {
 		60*60*24*30, // 30 dni
 		"/",
 		"",
-		false,
-		true, // httpOnly
+		false, //true when https
+		true,  // httpOnly
 	)
 
 	// return success message

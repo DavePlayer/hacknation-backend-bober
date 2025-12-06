@@ -43,7 +43,6 @@ func SignUp(c *gin.Context) {
 	}
 
 	// Respond
-	ru := models.ReturnedUser{}.From(user)
 
-	jsonRespond.SendJSON(c, ru)
+	jsonRespond.SendJSON(c, result)
 }
