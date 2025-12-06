@@ -13,7 +13,6 @@ import (
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		// get cookie
 		tokenString, err := c.Cookie("token")
 		if err != nil {
 			jsonRespond.Fail(c, http.StatusUnauthorized, "Unauthorized access", nil)
@@ -21,11 +20,10 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		// parse token
+		// secret
 		secret := []byte(os.Getenv("SECRET"))
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// verify alg
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrTokenInvalidClaims
 			}
@@ -38,7 +36,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		// get claims
+		// pobierz claims
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
 			jsonRespond.Fail(c, http.StatusUnauthorized, "Invalid token claims", nil)
@@ -55,7 +53,7 @@ func Auth() gin.HandlerFunc {
 			}
 		}
 
-		// attach user id to context
+		// dodaj userID do kontekstu
 		c.Set("userID", claims["sub"])
 
 		c.Next()
