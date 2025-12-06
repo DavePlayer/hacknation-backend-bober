@@ -34,6 +34,11 @@ func parseDate(s string) (time.Time, error) {
 
 		"02-01-06",
 		"02/01/06",
+		"2006-01-02 15:04",
+		"2006-01-02 15:04:05",
+		"02.01.2006 15:04",
+		"2006-01-02 15:04",
+		"2006-01-02 15:04:05",
 	}
 	for _, layout := range layouts {
 		if t, err := time.Parse(layout, s); err == nil {
@@ -167,7 +172,6 @@ func ImportXLSX(c *gin.Context) {
 			Voivodeship:  get(row, "Województwo"),
 		}
 
-		// daty – zakładam format np. "02.01.2006"
 		if t, err := parseDate(get(row, "Data przekazania dokumentu")); err == nil {
 			item.Document_transfer_date = t
 		}

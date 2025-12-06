@@ -13,7 +13,7 @@ import (
 func CreateItem(c *gin.Context) {
 
 	var body struct {
-		IssuerID             string    `json:"issuer_id"`
+		IssuerID             uint      `json:"issuer_id"`
 		Name                 string    `json:"name"`
 		Type                 string    `json:"type"`
 		Description          string    `json:"description"`
