@@ -65,14 +65,10 @@ func LoginHandler(c *gin.Context) {
 		60*60*24*30, // 30 dni
 		"/",
 		"",
-		false, //true when https
-		true,  // httpOnly
+		false,
+		true, // httpOnly
 	)
 
 	// return success message
 	jsonRespond.SendJSON(c, "Logged in!")
-
-	// jsonRespond.Success(c, "Login successful", gin.H{
-	// 	"token": tokenString,
-	// })
 }

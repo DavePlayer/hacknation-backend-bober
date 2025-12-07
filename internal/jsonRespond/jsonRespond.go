@@ -48,11 +48,16 @@ func Fail(c *gin.Context, httpStatus int, message string, data any) {
 func Error(c *gin.Context, httpStatus int, message string, err error) {
 	log.Printf("http error: %d %s: %v", httpStatus, message, err)
 
-	c.JSON(httpStatus, Response{
+	resp := Response{
 		Status:  StatusError,
 		Message: message,
-		Data: map[string]string{
+	}
+
+	if err != nil {
+		resp.Data = map[string]string{
 			"error": err.Error(),
-		},
-	})
+		}
+	}
+
+	c.JSON(httpStatus, resp)
 }
