@@ -13,8 +13,12 @@ import (
 func SignUp(c *gin.Context) {
 	//get email/pass of body
 	var body struct {
-		Email    string
-		Password string
+		Email       string
+		Password    string
+		Name        string
+		Surname     string
+		City        string
+		Voivodeship string
 	}
 	if c.Bind(&body) != nil {
 		jsonRespond.Error(c, http.StatusBadRequest, "Failed to get body", nil)
@@ -29,7 +33,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	// create user
-	user := models.User{Email: body.Email, Password: string(hash)}
+	user := models.User{Email: body.Email, Password: string(hash), Name: body.Name, Surname: body.Surname, City: body.City, Voivodeship: body.Voivodeship}
 	db, err := db.OpenDB()
 	if err != nil {
 		jsonRespond.Error(c, http.StatusBadRequest, "Failed to open db!", err)

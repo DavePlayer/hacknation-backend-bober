@@ -5,7 +5,6 @@ import "time"
 type Item struct {
 	ID                     uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	Issuer_id              uint      `gorm:"not null"  json:"issuerId"`
-	Issuer                 User      `gorm:"foreignKey:IssuerID;references:ID" json:"issuer"`
 	Name                   string    `gorm:"size:100;not null" json:"itemName"`
 	Type                   string    `gorm:"size:100;not null" json:"type"`
 	Description            string    `gorm:"size:500;not null" json:"description"`

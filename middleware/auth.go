@@ -3,7 +3,6 @@ package middleware
 import (
 	"net/http"
 	"os"
-	"time"
 
 	"bober.app/internal/jsonRespond"
 	"github.com/gin-gonic/gin"
@@ -12,21 +11,28 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		// if c.Request.Method == "OPTIONS" {
+		// 	c.Next()
+		// 	return
+		// }
+		// --- Pobieranie ciasteczka ------------------------------------------------
 		tokenString, err := c.Cookie("token")
-		if err != nil {
-			jsonRespond.Fail(c, http.StatusUnauthorized, "Unauthorized access", nil)
+		if err != nil || tokenString == "" {
+			jsonRespond.Fail(c, http.StatusUnauthorized, "Unauthorized access", err)
 			c.Abort()
 			return
 		}
 
-		// secret
+		// --- Parse token ----------------------------------------------------------
 		secret := []byte(os.Getenv("SECRET"))
 
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+
+			// Sprawdź, czy algorytm jest poprawny (HMAC)
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrTokenInvalidClaims
 			}
+
 			return secret, nil
 		})
 
@@ -36,25 +42,27 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		// pobierz claims
+		// --- Pobranie claims ------------------------------------------------------
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			jsonRespond.Fail(c, http.StatusUnauthorized, "Invalid token claims", nil)
+			jsonRespond.Fail(c, http.StatusUnauthorized, "Invalid claims", nil)
 			c.Abort()
 			return
 		}
 
-		// sprawdź exp
-		if exp, ok := claims["exp"].(float64); ok {
-			if int64(exp) < time.Now().Unix() {
-				jsonRespond.Fail(c, http.StatusUnauthorized, "Token expired", nil)
-				c.Abort()
-				return
-			}
+		// --- Walidacja exp --------------------------------------------------------
+		sub, ok := claims["sub"].(float64)
+		if !ok {
+			jsonRespond.Fail(c, http.StatusUnauthorized, "Invalid sub claim", nil)
+			c.Abort()
+			return
 		}
+		c.Set("userID", int64(sub))
 
-		// dodaj userID do kontekstu
-		c.Set("userID", claims["sub"])
+		// --- Przekazanie userID ---------------------------------------------------
+		// if sub, ok := claims["sub"]; ok {
+		// c.Set("userID", sub)
+		// }
 
 		c.Next()
 	}

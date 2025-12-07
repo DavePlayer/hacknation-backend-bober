@@ -58,21 +58,16 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	// Save JWT in cookie
+	c.SetSameSite(http.SameSiteNoneMode) // wymagane
 	c.SetCookie(
 		"token",
 		tokenString,
-		60*60*24*30, // 30 dni
+		60*60*24*30,
 		"/",
-		"",
-		false, //true when https
-		true,  // httpOnly
+		"10.250.192.140", // lub "10.250.192.140"
+		false,            // Secure = true
+		true,             // HttpOnly
 	)
-
-	// return success message
-	jsonRespond.SendJSON(c, "Logged in!")
-
-	// jsonRespond.Success(c, "Login successful", gin.H{
-	// 	"token": tokenString,
-	// })
+	returnedUser := models.ReturnedUser{}.From(user)
+	jsonRespond.SendJSON(c, returnedUser)
 }

@@ -9,6 +9,8 @@ type User struct {
 	Name         string    `gorm:"size:100;not null" json:"name"`
 	Surname      string    `gorm:"size:100;not null" json:"surname"`
 	Organization string    `gorm:"size:100;not null"  json:"organization"`
+	City         string    `gorm:"size:100; null"  json:"city"`
+	Voivodeship  string    `gorm:"size:100; null"  json:"voivodeship"`
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"createdAt"`
 	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
 }
@@ -19,6 +21,8 @@ type ReturnedUser struct {
 	Name         string    `gorm:"size:100;not null" json:"name"`
 	Surname      string    `gorm:"size:100;not null" json:"surname"`
 	Organization string    `gorm:"size:100;not null"  json:"organization"`
+	City         string    `gorm:"size:100; null"  json:"city"`
+	Voivodeship  string    `gorm:"size:100; null"  json:"voivodeship"`
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"createdAt"`
 	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
 }
@@ -30,6 +34,8 @@ func (ReturnedUser) From(u User) ReturnedUser {
 		Name:         u.Name,
 		Surname:      u.Surname,
 		Organization: u.Organization,
+		City:         u.City,
+		Voivodeship:  u.Voivodeship,
 		CreatedAt:    u.CreatedAt,
 		UpdatedAt:    u.UpdatedAt,
 	}

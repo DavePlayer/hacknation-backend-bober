@@ -2,6 +2,7 @@ package router
 
 import (
 	v1 "bober.app/routes/v1"
+	//"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 

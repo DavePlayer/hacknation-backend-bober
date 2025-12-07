@@ -16,7 +16,13 @@ func main() {
 	}
 	db.SyncDatabase()
 	router := router.New()
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://127.0.0.1:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
+	}))
+	//router.Use(cors.Default())
 
 	router.Run()
 }
