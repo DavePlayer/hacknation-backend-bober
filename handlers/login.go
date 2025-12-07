@@ -70,5 +70,5 @@ func LoginHandler(c *gin.Context) {
 	)
 
 	// return success message
-	jsonRespond.SendJSON(c, "Logged in!")
+	jsonRespond.SendJSON(c, user.ID)
 }

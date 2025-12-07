@@ -5,7 +5,6 @@ import (
 
 	"bober.app/internal/db"
 	router "bober.app/routes"
-	"github.com/gin-contrib/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -16,7 +15,7 @@ func main() {
 	}
 	db.SyncDatabase()
 	router := router.New()
-	router.Use(cors.Default())
+	// router.Use(cors.Default())
 
 	router.Run()
 }
