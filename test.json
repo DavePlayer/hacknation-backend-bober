@@ -1,0 +1,12 @@
+{
+    "itemName": "name of the phone",
+    "type": "type of the item that was lost",
+    "description": "details about the item. may include comments about it",
+    "documentTransferDate": "date when document was created taht concluded details about this item",
+    "foundDate": "ISO date when the item was found",
+    "issueNumber": "id of the item lost in database record from file",
+    "whereStored": "name of the city where the item is being held right now",
+    "whereFound": "name of the city where the item was found",
+    "voivodeship": "voivodeship name of the place where the item was found",
+    "status": "either \"pending\" or \"returned\" depending if the item returned to whe owner"
+}

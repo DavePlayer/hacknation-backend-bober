@@ -13,9 +13,12 @@ func Register(r *gin.RouterGroup) {
 	r.POST("/register", handlers.SignUp)
 	r.POST("/login", handlers.LoginHandler)
 
-	r.POST("/item", middleware.Auth(), item.CreateItem)
-	r.DELETE("/item/:id", middleware.Auth(), item.DeleteItem)
-	r.PUT("/item/:id", middleware.Auth(), item.UpdateItem)
+	// r.POST("/item", middleware.Auth(), item.CreateItem)
+	// r.DELETE("/item/:id", middleware.Auth(), item.DeleteItem)
+	// r.PUT("/item/:id", middleware.Auth(), item.UpdateItem)
+	r.POST("/item", item.CreateItem)
+	r.DELETE("/item/:id", item.DeleteItem)
+	r.PUT("/item/:id", item.UpdateItem)
 	r.GET("/item/:id", item.ReadItem)
 	r.GET("/items/:page", item.ReadItems)
 	// imports
