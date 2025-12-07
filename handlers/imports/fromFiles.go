@@ -1,7 +1,6 @@
 package imports
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,12 +11,12 @@ import (
 
 	"bober.app/internal/db"
 	"bober.app/internal/jsonRespond"
+	"bober.app/internal/ollama"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/xuri/excelize/v2"
 
 	"github.com/ledongthuc/pdf"
-	openai "github.com/sashabaranov/go-openai"
 )
 
 // Table reprezentuje jedną tabelę z pliku (arkusz Excela / wykryta tabela z PDF)
@@ -299,37 +298,29 @@ func ImportFilesAI(c *gin.Context) {
 		return
 	}
 
-	client := openai.NewClient(oaitoken)
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role: openai.ChatMessageRoleUser,
-					Content: "Jesteś analizatorem ogromnej ilości danych z różnych baz danych wyeksportowanych do plików pdf lub xlsl które musisz zwrócić do jsona" +
-						"Każda dana jest podzielona na osobne pliki pdf oraz excel które trzeba przerobić na poniższy obiekt JSON który zawiera te dane" +
-						"Poniżej jest wypisane jak powinna wyglądać struktura JSON:" +
-						string(dataStructure),
-				},
-				{
-					Role: openai.ChatMessageRoleUser,
-					Content: "Oto dane do analizy:" +
-						string(llmPayload),
-				},
-			},
-			Temperature: 0.1,
-		},
-	)
+	var systemPrompt = `
+	Jesteś narzędziem do ETL danych.
 
+	MASZ ZWRÓCIĆ TYLKO POPRAWNY JSON, BEZ ŻADNEGO DODATKOWEGO TEKSTU, BEZ MARKDOWN, BEZ KOMENTARZY, BEZ KODU PYTHON.
+	ŻADNYCH WYJAŚNIEŃ, ŻADNYCH KROKÓW, ZERO OPISU. Tylko jeden obiekt JSON.
+
+	1. Struktura obiektu wynikowego ma być dokładnie jak w tym przykładzie (to TYLKO przykład struktury, nie danych):
+
+
+	2. Jeśli czegoś nie da się wyciągnąć z danych wejściowych, ustaw tam pusty string "" albo null (w zależności od sensu pola).
+	3. NIE DODAWAJ ŻADNYCH DODATKOWYCH PÓL.
+	4. Odpowiedź ma być jedynym poprawnym JSON-em.
+	
+	struktura danych:
+	` + string(dataStructure)
+
+	userContent := "Oto dane do analizy (jako JSON):\n\n" + string(llmPayload)
+
+	analysis, err := ollama.CallOllama(systemPrompt + userContent)
 	if err != nil {
-		jsonRespond.Error(c, http.StatusInternalServerError, "error when sending AI message", err)
+		jsonRespond.Error(c, http.StatusInternalServerError, "error when calling local LLM (ollama)", err)
 		return
 	}
-
-	fmt.Println(resp.Choices[0].Message.Content)
-
-	analysis := resp.Choices[0].Message.Content
 
 	// 7. Na razie zwracamy „surowe” dane, żebyś widział co backend wypluwa.
 	jsonRespond.SendJSON(c, ImportFilesAIResponse{

@@ -23,6 +23,7 @@ func Register(r *gin.RouterGroup) {
 	r.GET("/items/:page", item.ReadItems)
 	// imports
 	r.POST("/import/xlsl", imports.ImportXLSX)
+	r.POST("/import/ai", imports.ImportFilesAI)
 
 	r.GET("/checkToken", middleware.Auth(), handlers.MeHandler)
 
