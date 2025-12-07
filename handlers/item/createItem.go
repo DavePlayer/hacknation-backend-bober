@@ -8,25 +8,27 @@ import (
 	"bober.app/internal/jsonRespond"
 	"bober.app/models"
 	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 func CreateItem(c *gin.Context) {
 
 	var body struct {
-		IssuerID             uint      `json:"issuer_id"`
-		Name                 string    `json:"name"`
+		IssuerID             uint      `json:"issuerId"`
+		Name                 string    `json:"itemName"`
 		Type                 string    `json:"type"`
 		Description          string    `json:"description"`
-		DocumentTransferDate time.Time `json:"document_transfer_date"`
-		EntryDate            time.Time `json:"entry_date"`
-		FoundDate            time.Time `json:"found_date"`
-		IssueNumber          string    `json:"issue_number"`
-		WhereStored          string    `json:"where_stored"`
-		WhereFound           string    `json:"where_found"`
+		DocumentTransferDate time.Time `json:"documentTransferDate"`
+		EntryDate            time.Time `json:"entryDate"`
+		FoundDate            time.Time `json:"foundDate"`
+		IssueNumber          string    `json:"issueNumber"`
+		WhereStored          string    `json:"whereStorred"`
+		WhereFound           string    `json:"whereFound"`
 		Voivodeship          string    `json:"voivodeship"`
 	}
 
 	if c.Bind(&body) != nil {
+		log.Info("body: %v", body)
 		jsonRespond.Error(c, http.StatusBadRequest, "Failed to get body", nil)
 		return
 	}

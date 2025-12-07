@@ -48,5 +48,5 @@ func SignUp(c *gin.Context) {
 
 	// Respond
 
-	jsonRespond.SendJSON(c, result)
+	jsonRespond.SendJSON(c, nil)
 }
